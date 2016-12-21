@@ -28,3 +28,5 @@ Desktop.ini
 !*.conf.js
 
 /coverage
+
+!dist/**/*.*
