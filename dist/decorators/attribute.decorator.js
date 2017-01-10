@@ -3,10 +3,10 @@ var moment = require("moment");
 var DateConverter = (function () {
     function DateConverter() {
     }
-    DateConverter.prototype.mask = function () {
+    DateConverter.prototype.mask = function (value) {
         return moment(value).toDate();
     };
-    DateConverter.prototype.unmask = function () {
+    DateConverter.prototype.unmask = function (value) {
         return moment(value).format(moment.defaultFormatUtc);
     };
     return DateConverter;
