@@ -25,10 +25,10 @@ function Attribute(config) {
             }
             if (attrConverter) {
                 if (!forSerialisation) {
-                    return attrConverter.mask();
+                    return attrConverter.mask(value);
                 }
                 else {
-                    return attrConverter.unmask();
+                    return attrConverter.unmask(value);
                 }
             }
             return value;

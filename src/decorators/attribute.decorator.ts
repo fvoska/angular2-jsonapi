@@ -24,9 +24,9 @@ export function Attribute(config: any = {}) {
 
       if (attrConverter) {
         if (!forSerialisation) {
-          return attrConverter.mask();
+          return attrConverter.mask(value);
         } else {
-          return attrConverter.unmask();
+          return attrConverter.unmask(value);
         }
       }
 
