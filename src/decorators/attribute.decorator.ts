@@ -1,16 +1,32 @@
 import * as moment from 'moment';
 
+class DateConverter {
+  mask() {
+    return moment(value).toDate();
+  }
+
+  unmask() {
+    return moment(value).format(moment.defaultFormatUtc);
+  }
+}
+
 export function Attribute(config: any = {}) {
   return function (target: any, propertyName: string) {
 
     let converter = function(dataType: any, value: any, forSerialisation = false): any {
-      if (!forSerialisation) {
-        if (dataType === Date) {
-          return moment(value).toDate();
-        }
-      } else {
-        if (dataType === Date) {
-          return moment(value).format(moment.defaultFormatUtc);
+      let attrConverter;
+
+      if (config.converter) {
+        attrConverter = config.converter;
+      } else if (dataType === Date) {
+        attrConverter = new DateConverter();
+      }
+
+      if (attrConverter) {
+        if (!forSerialisation) {
+          return attrConverter.mask();
+        } else {
+          return attrConverter.unmask();
         }
       }
 

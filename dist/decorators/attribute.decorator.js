@@ -1,18 +1,34 @@
 "use strict";
 var moment = require("moment");
+var DateConverter = (function () {
+    function DateConverter() {
+    }
+    DateConverter.prototype.mask = function () {
+        return moment(value).toDate();
+    };
+    DateConverter.prototype.unmask = function () {
+        return moment(value).format(moment.defaultFormatUtc);
+    };
+    return DateConverter;
+}());
 function Attribute(config) {
     if (config === void 0) { config = {}; }
     return function (target, propertyName) {
         var converter = function (dataType, value, forSerialisation) {
             if (forSerialisation === void 0) { forSerialisation = false; }
-            if (!forSerialisation) {
-                if (dataType === Date) {
-                    return moment(value).toDate();
-                }
+            var attrConverter;
+            if (config.converter) {
+                attrConverter = config.converter;
             }
-            else {
-                if (dataType === Date) {
-                    return moment(value).format(moment.defaultFormatUtc);
+            else if (dataType === Date) {
+                attrConverter = new DateConverter();
+            }
+            if (attrConverter) {
+                if (!forSerialisation) {
+                    return attrConverter.mask();
+                }
+                else {
+                    return attrConverter.unmask();
                 }
             }
             return value;
