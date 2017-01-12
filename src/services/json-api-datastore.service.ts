@@ -139,7 +139,7 @@ export class JsonApiDatastore {
   }
 
   private extractRecordData<T extends JsonApiModel>(res: any, modelType: ModelType<T>, model?: T): T {
-    let body: any = res.json();
+    let body: any = res.json ? res.json() : res;
     if (model) {
       model.id = body.data.id;
       _.extend(model, body.data.attributes);
@@ -149,6 +149,11 @@ export class JsonApiDatastore {
     if (body.included) {
       model.syncRelationships(body.data, body.included, 0);
       this.addToStore(model);
+
+      body.included.forEach((includedModelData: any) => {
+        const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).models;
+        this.extractRecordData({data: includedModelData}, models[includedModelData.type]);
+      });
     }
     return model;
   }
