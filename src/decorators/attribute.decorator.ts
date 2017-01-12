@@ -1,11 +1,11 @@
 import * as moment from 'moment';
 
 class DateConverter {
-  mask(value) {
+  mask(value: any) {
     return moment(value).toDate();
   }
 
-  unmask(value) {
+  unmask(value: any) {
     return moment(value).format(moment.defaultFormatUtc);
   }
 }

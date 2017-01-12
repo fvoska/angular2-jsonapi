@@ -140,7 +140,8 @@ var JsonApiDatastore = (function () {
         return models;
     };
     JsonApiDatastore.prototype.extractRecordData = function (res, modelType, model) {
-        var body = res.json();
+        var _this = this;
+        var body = res.json ? res.json() : res;
         if (model) {
             model.id = body.data.id;
             _.extend(model, body.data.attributes);
@@ -150,6 +151,10 @@ var JsonApiDatastore = (function () {
         if (body.included) {
             model.syncRelationships(body.data, body.included, 0);
             this.addToStore(model);
+            body.included.forEach(function (includedModelData) {
+                var models = Reflect.getMetadata('JsonApiDatastoreConfig', _this.constructor).models;
+                _this.extractRecordData({ data: includedModelData }, models[includedModelData.type]);
+            });
         }
         return model;
     };
