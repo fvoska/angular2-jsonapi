@@ -23,8 +23,11 @@ function Attribute(config) {
             else if (dataType === Date) {
                 attrConverter = new DateConverter();
             }
-            else if (dataType.mask && dataType.unmask) {
-                attrConverter = new dataType();
+            else {
+                var datatype = new dataType();
+                if (datatype.mask && datatype.unmask) {
+                    attrConverter = datatype;
+                }
             }
             if (attrConverter) {
                 if (!forSerialisation) {
