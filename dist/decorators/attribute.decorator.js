@@ -23,6 +23,9 @@ function Attribute(config) {
             else if (dataType === Date) {
                 attrConverter = new DateConverter();
             }
+            else if (dataType.mask && dataType.unmask) {
+                attrConverter = new dataType();
+            }
             if (attrConverter) {
                 if (!forSerialisation) {
                     return attrConverter.mask(value);

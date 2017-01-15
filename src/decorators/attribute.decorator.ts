@@ -20,6 +20,8 @@ export function Attribute(config: any = {}) {
         attrConverter = config.converter;
       } else if (dataType === Date) {
         attrConverter = new DateConverter();
+      } else if (dataType.mask && dataType.unmask) {
+        attrConverter = new dataType();
       }
 
       if (attrConverter) {
