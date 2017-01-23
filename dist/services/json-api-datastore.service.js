@@ -263,6 +263,9 @@ var JsonApiDatastore = (function () {
         return model;
     };
     ;
+    JsonApiDatastore.prototype.setBaseUrl = function (baseUrl) {
+        Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl = baseUrl;
+    };
     return JsonApiDatastore;
 }());
 JsonApiDatastore = __decorate([

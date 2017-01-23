@@ -32,4 +32,5 @@ export declare class JsonApiDatastore {
     private fromArrayToHash(models);
     private resetMetadataAttributes<T>(res, attributesMetadata, modelType);
     private updateRelationships(model, relationships);
+    setBaseUrl(baseUrl: string): void;
 }
