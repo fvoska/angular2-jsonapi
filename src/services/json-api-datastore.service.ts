@@ -44,7 +44,7 @@ export class JsonApiDatastore {
     let modelType = <ModelType<T>>model.constructor;
     let typeName: string = Reflect.getMetadata('JsonApiModelConfig', modelType).type;
     let options: RequestOptions = this.getOptions(headers);
-    let relationships: any = !model.id ? this.getRelationships(model) : undefined;
+    let relationships: any = this.getRelationships(model);
     let url: string = this.buildUrl(modelType, params, model.id);
     let dirtyData: any = {};
     for (let propertyName in attributesMetadata) {
