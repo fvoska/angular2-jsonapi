@@ -52,9 +52,7 @@ var JsonApiDatastore = (function () {
         for (var propertyName in attributesMetadata) {
             if (attributesMetadata.hasOwnProperty(propertyName)) {
                 var metadata = attributesMetadata[propertyName];
-                if (metadata.hasDirtyAttributes) {
-                    dirtyData[propertyName] = metadata.serialisationValue ? metadata.serialisationValue : metadata.newValue;
-                }
+                dirtyData[propertyName] = metadata.serialisationValue ? metadata.serialisationValue : metadata.newValue;
             }
         }
         var httpCall;
