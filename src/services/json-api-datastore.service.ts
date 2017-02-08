@@ -50,9 +50,7 @@ export class JsonApiDatastore {
     for (let propertyName in attributesMetadata) {
       if (attributesMetadata.hasOwnProperty(propertyName)) {
         let metadata: any = attributesMetadata[propertyName];
-        if (metadata.hasDirtyAttributes) {
-          dirtyData[propertyName] = metadata.serialisationValue ? metadata.serialisationValue : metadata.newValue;
-        }
+        dirtyData[propertyName] = metadata.serialisationValue ? metadata.serialisationValue : metadata.newValue;
       }
     }
     let httpCall: Observable<Response>;
