@@ -253,7 +253,7 @@ var JsonApiDatastore = (function () {
                 var propertyHasMany = _.find(hasMany, function (property) {
                     return modelsTypes[property.relationship] === model.constructor;
                 });
-                if (propertyHasMany) {
+                if (propertyHasMany && relationshipModel[propertyHasMany.propertyName]) {
                     relationshipModel[propertyHasMany.propertyName].push(model);
                 }
             }
