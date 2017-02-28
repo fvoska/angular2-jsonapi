@@ -1,13 +1,23 @@
 "use strict";
 var _ = require("lodash");
+var links_model_1 = require("./links.model");
 var JsonApiModel = (function () {
     function JsonApiModel(_datastore, data) {
         this._datastore = _datastore;
+        this._links = new links_model_1.LinksModel;
         if (data) {
             this.id = data.id;
             _.extend(this, data.attributes);
         }
+        this._links.updateLinks(data.links);
     }
+    Object.defineProperty(JsonApiModel.prototype, "links", {
+        get: function () {
+            return this._links;
+        },
+        enumerable: true,
+        configurable: true
+    });
     JsonApiModel.prototype.syncRelationships = function (data, included, level) {
         if (data) {
             this.parseHasMany(data, included, level);
