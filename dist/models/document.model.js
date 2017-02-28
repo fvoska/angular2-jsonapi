@@ -4,6 +4,7 @@ var DocumentModel = (function () {
     function DocumentModel(body) {
         this._links = new links_model_1.LinksModel;
         this._links.updateLinks(body.links);
+        this._meta = body.meta;
     }
     Object.defineProperty(DocumentModel.prototype, "links", {
         get: function () {
@@ -18,6 +19,16 @@ var DocumentModel = (function () {
         },
         set: function (data) {
             this._data = data;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DocumentModel.prototype, "meta", {
+        get: function () {
+            return this._meta;
+        },
+        set: function (meta) {
+            this._meta = meta;
         },
         enumerable: true,
         configurable: true
