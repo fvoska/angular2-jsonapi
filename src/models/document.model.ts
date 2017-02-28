@@ -27,6 +27,6 @@ export class DocumentModel<T> {
   }
 
   get meta() {
-    this._meta;
+    return this._meta;
   }
 }
