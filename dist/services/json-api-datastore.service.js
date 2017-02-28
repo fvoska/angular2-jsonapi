@@ -16,6 +16,7 @@ require("rxjs/add/operator/map");
 require("rxjs/add/operator/catch");
 require("rxjs/add/observable/throw");
 var json_api_model_1 = require("../models/json-api.model");
+var document_model_1 = require("../models/document.model");
 var error_response_model_1 = require("../models/error-response.model");
 var JsonApiDatastore = (function () {
     function JsonApiDatastore(http) {
@@ -126,6 +127,7 @@ var JsonApiDatastore = (function () {
         var _this = this;
         var body = res.json();
         var models = [];
+        var document = new document_model_1.DocumentModel(body);
         body.data.forEach(function (data) {
             var model = new modelType(_this, data);
             _this.addToStore(model);
@@ -135,11 +137,13 @@ var JsonApiDatastore = (function () {
             }
             models.push(model);
         });
-        return models;
+        document.data = models;
+        return document;
     };
     JsonApiDatastore.prototype.extractRecordData = function (res, modelType, model) {
         var _this = this;
-        var body = res.json ? res.json() : res;
+        var body = res.json();
+        var document = new document_model_1.DocumentModel(body);
         if (model) {
             model.id = body.data.id;
             _.extend(model, body.data.attributes);
@@ -154,7 +158,8 @@ var JsonApiDatastore = (function () {
                 _this.extractRecordData({ data: includedModelData }, models[includedModelData.type]);
             });
         }
-        return model;
+        document.data = model;
+        return document;
     };
     JsonApiDatastore.prototype.handleError = function (error) {
         var errMsg = (error.message) ? error.message :

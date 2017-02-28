@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { JsonApiModel } from '../models/json-api.model';
+import { DocumentModel } from '../models/document.model';
 export declare type ModelType<T extends JsonApiModel> = {
     new (datastore: JsonApiDatastore, data: any): T;
 };
@@ -13,10 +14,10 @@ export declare class JsonApiDatastore {
     private _headers;
     private _store;
     constructor(http: Http);
-    query<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, headers?: Headers): Observable<T[]>;
-    findRecord<T extends JsonApiModel>(modelType: ModelType<T>, id: string, params?: any, headers?: Headers): Observable<T>;
+    query<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, headers?: Headers): Observable<DocumentModel<T[]>>;
+    findRecord<T extends JsonApiModel>(modelType: ModelType<T>, id: string, params?: any, headers?: Headers): Observable<DocumentModel<T>>;
     createRecord<T extends JsonApiModel>(modelType: ModelType<T>, data?: any): T;
-    saveRecord<T extends JsonApiModel>(attributesMetadata: any, model?: T, params?: any, headers?: Headers): Observable<T>;
+    saveRecord<T extends JsonApiModel>(attributesMetadata: any, model?: T, params?: any, headers?: Headers): Observable<DocumentModel<T>>;
     deleteRecord<T extends JsonApiModel>(modelType: ModelType<T>, id: string, headers?: Headers): Observable<Response>;
     peekRecord<T extends JsonApiModel>(modelType: ModelType<T>, id: string): T;
     peekAll<T extends JsonApiModel>(modelType: ModelType<T>): T[];
