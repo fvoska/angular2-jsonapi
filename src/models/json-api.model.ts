@@ -5,6 +5,7 @@ import { JsonApiDatastore, ModelType } from '../services/json-api-datastore.serv
 import { LinksModel } from './links.model';
 import { LinkModel } from './link.model';
 import { DocumentModel } from '../models/document.model';
+import { AttributeMetadata } from '../constants/symbols';
 
 export class JsonApiModel {
 
@@ -32,12 +33,12 @@ export class JsonApiModel {
   }
 
   save(params?: any, headers?: Headers): Observable<DocumentModel<this>> {
-    let attributesMetadata: any = Reflect.getMetadata('Attribute', this);
+    let attributesMetadata: any = this[AttributeMetadata];
     return this._datastore.saveRecord(attributesMetadata, this, params, headers);
   }
 
   get hasDirtyAttributes() {
-    let attributesMetadata: any = Reflect.getMetadata('Attribute', this);
+    let attributesMetadata: any = this[AttributeMetadata];
     let hasDirtyAttributes = false;
     for (let propertyName in attributesMetadata) {
       if (attributesMetadata.hasOwnProperty(propertyName)) {
@@ -52,7 +53,7 @@ export class JsonApiModel {
   }
 
   rollbackAttributes(): void {
-    let attributesMetadata: any = Reflect.getMetadata('Attribute', this);
+    let attributesMetadata: any = this[AttributeMetadata];
     let metadata: any;
     for (let propertyName in attributesMetadata) {
       if (attributesMetadata.hasOwnProperty(propertyName)) {
@@ -67,7 +68,8 @@ export class JsonApiModel {
         }
       }
     }
-    Reflect.defineMetadata('Attribute', attributesMetadata, this);
+
+    this[AttributeMetadata] = attributesMetadata;
   }
 
   private parseHasMany(data: any, included: any, level: number): void {

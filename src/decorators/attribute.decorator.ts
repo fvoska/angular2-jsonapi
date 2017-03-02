@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { AttributeMetadata } from '../constants/symbols';
 
 class DateConverter {
   mask(value: any) {
@@ -39,18 +40,29 @@ export function Attribute(config: any = {}) {
       return value;
     };
 
-    let saveAnnotations = function (hasDirtyAttributes: boolean, oldValue: any, newValue: any, isNew: boolean) {
-      let annotations = Reflect.getMetadata('Attribute', target) || {};
+    let saveAnnotations = function() {
+      const metadata = Reflect.getMetadata('Attribute', target) || {};
+      metadata[propertyName] = {
+        marked: true
+      };
+
+      Reflect.defineMetadata('Attribute', metadata, target);
+    };
+
+    let setMetadata = function(hasDirtyAttributes: boolean, instance: any, oldValue: any, newValue: any, isNew: boolean) {
       let targetType = Reflect.getMetadata('design:type', target, propertyName);
 
+      if (!instance[AttributeMetadata]) {
+        instance[AttributeMetadata] = {};
+      }
+
       hasDirtyAttributes = typeof oldValue === 'undefined' && !isNew ? false : hasDirtyAttributes;
-      annotations[propertyName] = {
+      instance[AttributeMetadata][propertyName] = {
         hasDirtyAttributes: hasDirtyAttributes,
         oldValue: oldValue,
         newValue: newValue,
         serialisationValue: converter(targetType, newValue, true)
       };
-      Reflect.defineMetadata('Attribute', annotations, target);
     };
 
     let getter = function () {
@@ -61,13 +73,13 @@ export function Attribute(config: any = {}) {
       let targetType = Reflect.getMetadata('design:type', target, propertyName);
       let convertedValue = converter(targetType, newVal);
       if (convertedValue !== this['_' + propertyName]) {
-        saveAnnotations(true, this['_' + propertyName], newVal, !this.id);
+        setMetadata(true, this, this['_' + propertyName], newVal, !this.id);
         this['_' + propertyName] = convertedValue;
       }
     };
 
     if (delete target[propertyName]) {
-      saveAnnotations(false, undefined, target[propertyName], target.id);
+      saveAnnotations();
       Object.defineProperty(target, propertyName, {
         get: getter,
         set: setter,

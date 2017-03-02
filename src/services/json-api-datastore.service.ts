@@ -9,6 +9,7 @@ import 'rxjs/add/observable/throw';
 import { JsonApiModel } from '../models/json-api.model';
 import { DocumentModel } from '../models/document.model';
 import {ErrorResponse} from '../models/error-response.model';
+import { AttributeMetadata } from '../constants/symbols';
 
 export type ModelType<T extends JsonApiModel> = {
   new(
@@ -248,7 +249,7 @@ export class JsonApiDatastore {
   }
 
   private resetMetadataAttributes<T extends JsonApiModel>(res: any, attributesMetadata: any, modelType: ModelType<T>) {
-    attributesMetadata = Reflect.getMetadata('Attribute', res);
+    attributesMetadata = res[AttributeMetadata];
     for (let propertyName in attributesMetadata) {
       if (attributesMetadata.hasOwnProperty(propertyName)) {
         let metadata: any = attributesMetadata[propertyName];
@@ -257,7 +258,8 @@ export class JsonApiDatastore {
         }
       }
     }
-    Reflect.defineMetadata('Attribute', attributesMetadata, res);
+
+    res[AttributeMetadata] = attributesMetadata;
     return res;
   }
 
