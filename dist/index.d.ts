@@ -8,5 +8,6 @@ export * from './models/document.model';
 export * from './models/links.model';
 export * from './models/link.model';
 export * from './models/error-response.model';
+export * from './constants/symbols';
 export * from './providers';
 export * from './module';

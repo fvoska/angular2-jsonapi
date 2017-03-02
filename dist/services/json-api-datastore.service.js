@@ -18,6 +18,7 @@ require("rxjs/add/observable/throw");
 var json_api_model_1 = require("../models/json-api.model");
 var document_model_1 = require("../models/document.model");
 var error_response_model_1 = require("../models/error-response.model");
+var symbols_1 = require("../constants/symbols");
 var JsonApiDatastore = (function () {
     function JsonApiDatastore(http) {
         this.http = http;
@@ -237,7 +238,7 @@ var JsonApiDatastore = (function () {
         return _.keyBy(modelsArray, 'id');
     };
     JsonApiDatastore.prototype.resetMetadataAttributes = function (res, attributesMetadata, modelType) {
-        attributesMetadata = Reflect.getMetadata('Attribute', res);
+        attributesMetadata = res[symbols_1.AttributeMetadata];
         for (var propertyName in attributesMetadata) {
             if (attributesMetadata.hasOwnProperty(propertyName)) {
                 var metadata = attributesMetadata[propertyName];
@@ -246,7 +247,7 @@ var JsonApiDatastore = (function () {
                 }
             }
         }
-        Reflect.defineMetadata('Attribute', attributesMetadata, res);
+        res[symbols_1.AttributeMetadata] = attributesMetadata;
         return res;
     };
     JsonApiDatastore.prototype.updateRelationships = function (model, relationships) {

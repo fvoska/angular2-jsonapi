@@ -1,6 +1,7 @@
 "use strict";
 var _ = require("lodash");
 var links_model_1 = require("./links.model");
+var symbols_1 = require("../constants/symbols");
 var JsonApiModel = (function () {
     function JsonApiModel(_datastore, data) {
         this._datastore = _datastore;
@@ -25,12 +26,12 @@ var JsonApiModel = (function () {
         }
     };
     JsonApiModel.prototype.save = function (params, headers) {
-        var attributesMetadata = Reflect.getMetadata('Attribute', this);
+        var attributesMetadata = this[symbols_1.AttributeMetadata];
         return this._datastore.saveRecord(attributesMetadata, this, params, headers);
     };
     Object.defineProperty(JsonApiModel.prototype, "hasDirtyAttributes", {
         get: function () {
-            var attributesMetadata = Reflect.getMetadata('Attribute', this);
+            var attributesMetadata = this[symbols_1.AttributeMetadata];
             var hasDirtyAttributes = false;
             for (var propertyName in attributesMetadata) {
                 if (attributesMetadata.hasOwnProperty(propertyName)) {
@@ -47,7 +48,7 @@ var JsonApiModel = (function () {
         configurable: true
     });
     JsonApiModel.prototype.rollbackAttributes = function () {
-        var attributesMetadata = Reflect.getMetadata('Attribute', this);
+        var attributesMetadata = this[symbols_1.AttributeMetadata];
         var metadata;
         for (var propertyName in attributesMetadata) {
             if (attributesMetadata.hasOwnProperty(propertyName)) {
@@ -62,7 +63,7 @@ var JsonApiModel = (function () {
                 }
             }
         }
-        Reflect.defineMetadata('Attribute', attributesMetadata, this);
+        this[symbols_1.AttributeMetadata] = attributesMetadata;
     };
     JsonApiModel.prototype.parseHasMany = function (data, included, level) {
         var hasMany = Reflect.getMetadata('HasMany', this);
