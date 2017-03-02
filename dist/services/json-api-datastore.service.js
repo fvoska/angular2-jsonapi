@@ -142,7 +142,7 @@ var JsonApiDatastore = (function () {
     };
     JsonApiDatastore.prototype.extractRecordData = function (res, modelType, model) {
         var _this = this;
-        var body = res.json();
+        var body = res.json ? res.json() : res;
         var document = new document_model_1.DocumentModel(body);
         if (model) {
             model.id = body.data.id;

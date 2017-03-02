@@ -143,9 +143,9 @@ export class JsonApiDatastore {
     document.data = models;
     return document;
   }
-  
+
   private extractRecordData<T extends JsonApiModel>(res: any, modelType: ModelType<T>, model?: T): DocumentModel<T> {
-    let body: any = res.json();
+    let body: any = res.json ? res.json() : res;
     let document: DocumentModel<T> = new DocumentModel<T>(body);
 
     if (model) {
