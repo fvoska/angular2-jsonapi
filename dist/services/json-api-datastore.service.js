@@ -102,9 +102,10 @@ var JsonApiDatastore = (function () {
     });
     JsonApiDatastore.prototype.buildUrl = function (modelType, params, id) {
         var typeName = Reflect.getMetadata('JsonApiModelConfig', modelType).type;
+        var modelBaseUrl = Reflect.getMetadata('JsonApiModelConfig', this.constructor).baseUrl;
         var baseUrl = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
         var idToken = id ? "/" + id : null;
-        return [baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
+        return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
     };
     JsonApiDatastore.prototype.getRelationships = function (data) {
         var relationships;
