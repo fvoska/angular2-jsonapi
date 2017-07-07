@@ -101,8 +101,9 @@ var JsonApiDatastore = (function () {
         configurable: true
     });
     JsonApiDatastore.prototype.buildUrl = function (modelType, params, id) {
-        var typeName = Reflect.getMetadata('JsonApiModelConfig', modelType).type;
-        var modelBaseUrl = Reflect.getMetadata('JsonApiModelConfig', this.constructor).baseUrl;
+        var modelOptions = Reflect.getMetadata('JsonApiModelConfig', modelType);
+        var typeName = modelOptions.type;
+        var modelBaseUrl = modelOptions.baseUrl;
         var baseUrl = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
         var idToken = id ? "/" + id : null;
         return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
