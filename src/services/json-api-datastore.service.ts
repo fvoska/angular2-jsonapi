@@ -8,6 +8,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { JsonApiModel } from '../models/json-api.model';
 import {ErrorResponse} from '../models/error-response.model';
+import { ModelOptions } from '../interfaces/model-options.interface';
 
 export type ModelType<T extends JsonApiModel> = { new(datastore: JsonApiDatastore, data: any): T; };
 
@@ -98,8 +99,9 @@ export class JsonApiDatastore {
   }
 
   private buildUrl<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, id?: string): string {
-    let typeName: string = Reflect.getMetadata('JsonApiModelConfig', modelType).type;
-    let modelBaseUrl: string = Reflect.getMetadata('JsonApiModelConfig', this.constructor).baseUrl;
+    const modelOptions: ModelOptions = Reflect.getMetadata('JsonApiModelConfig', modelType);
+    let typeName: string = modelOptions.type;
+    let modelBaseUrl: string = modelOptions.baseUrl;
     let baseUrl: string = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
     let idToken: string = id ? `/${id}` : null;
     return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
