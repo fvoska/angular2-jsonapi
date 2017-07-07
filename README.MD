@@ -456,15 +456,26 @@ Moreover, it should be noted that the following assumptions have been made:
 - The library also assumes that dates will be sent and received in UTC. This should be a safe assumption for Api providers to multinational clients, or cloud hosting where the timezone of the server cannot be guaranteed.
 
 
+### Model options
+
+```typescript
+@JsonApiModelConfig(options: ModelOptions)
+export class Post extends JsonApiModel { }
+```
+`options`:
+
+* `type`
+* `baseUrl` - if not specified, the global `baseUrl` will be used
+
 ## TODO
 - [x] Deleting records
 - [x] Conversion to and from `Date` property
 - [x] Handling validation errors
+- [x] Setting a specific baseUrl for each model
 - [ ] Updating or removing a relationship
 - [ ] [Explicit inverses](https://guides.emberjs.com/v2.8.0/models/relationships/#toc_explicit-inverses)
 - [ ] Loading an object's relationships
 - [ ] Unit testing
-- [ ] Setting a specific baseUrl for each model
 
 
 ## Development
