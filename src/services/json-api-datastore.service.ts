@@ -28,9 +28,9 @@ export class JsonApiDatastore {
   constructor(private http: Http) {
   }
 
-  query<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, headers?: Headers): Observable<DocumentModel<T[]>> {
+  query<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, headers?: Headers, customUrl?: string): Observable<T[]> {
     let options: RequestOptions = this.getOptions(headers);
-    let url: string = this.buildUrl(modelType, params);
+    let url: string = customUrl || this.buildUrl(modelType, params);
     return this.http.get(url, options)
         .map((res: any) => this.extractQueryData(res, modelType))
         .catch((res: any) => this.handleError(res));
@@ -103,13 +103,18 @@ export class JsonApiDatastore {
     this._headers = headers;
   }
 
-  private buildUrl<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, id?: string): string {
+  private buildUrl<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, id?: string, customEndpointUrl?: string): string {
     const modelOptions: ModelOptions = Reflect.getMetadata('JsonApiModelConfig', modelType);
-    let typeName: string = modelOptions.type;
-    let modelBaseUrl: string = modelOptions.baseUrl;
-    let baseUrl: string = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
-    let idToken: string = id ? `/${id}` : null;
-    return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
+
+    if (customEndpointUrl) {
+      return [customEndpointUrl, (params ? '?' : ''), this.toQueryString(params)].join('');
+    } else {
+      const typeName: string = modelOptions.type;
+      const baseUrl: string = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
+      const modelBaseUrl: string = modelOptions.baseUrl;
+      const idToken: string = id ? `/${id}` : null;
+      return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
+    }
   }
 
   private getRelationships(data: any): any {
