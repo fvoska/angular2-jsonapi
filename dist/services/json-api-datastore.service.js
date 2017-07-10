@@ -27,7 +27,7 @@ var JsonApiDatastore = (function () {
     JsonApiDatastore.prototype.query = function (modelType, params, headers, customUrl) {
         var _this = this;
         var options = this.getOptions(headers);
-        var url = customUrl || this.buildUrl(modelType, params);
+        var url = this.buildUrl(modelType, params, null, customUrl);
         return this.http.get(url, options)
             .map(function (res) { return _this.extractQueryData(res, modelType); })
             .catch(function (res) { return _this.handleError(res); });
