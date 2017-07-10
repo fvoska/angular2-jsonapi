@@ -14,7 +14,7 @@ export declare class JsonApiDatastore {
     private _headers;
     private _store;
     constructor(http: Http);
-    query<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, headers?: Headers, customUrl?: string): Observable<T[]>;
+    query<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, headers?: Headers, customUrl?: string): Observable<DocumentModel<T[]>>;
     findRecord<T extends JsonApiModel>(modelType: ModelType<T>, id: string, params?: any, headers?: Headers): Observable<DocumentModel<T>>;
     createRecord<T extends JsonApiModel>(modelType: ModelType<T>, data?: any): T;
     saveRecord<T extends JsonApiModel>(attributesMetadata: any, model?: T, params?: any, headers?: Headers): Observable<DocumentModel<T>>;
