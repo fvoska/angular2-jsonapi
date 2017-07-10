@@ -23,7 +23,7 @@ export class JsonApiDatastore {
 
   query<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, headers?: Headers, customUrl?: string): Observable<T[]> {
     let options: RequestOptions = this.getOptions(headers);
-    let url: string = customUrl || this.buildUrl(modelType, params);
+    let url: string = this.buildUrl(modelType, params, null, customUrl);
     return this.http.get(url, options)
         .map((res: any) => this.extractQueryData(res, modelType))
         .catch((res: any) => this.handleError(res));
