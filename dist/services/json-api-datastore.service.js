@@ -24,10 +24,10 @@ var JsonApiDatastore = (function () {
         this.http = http;
         this._store = {};
     }
-    JsonApiDatastore.prototype.query = function (modelType, params, headers) {
+    JsonApiDatastore.prototype.query = function (modelType, params, headers, customUrl) {
         var _this = this;
         var options = this.getOptions(headers);
-        var url = this.buildUrl(modelType, params);
+        var url = customUrl || this.buildUrl(modelType, params);
         return this.http.get(url, options)
             .map(function (res) { return _this.extractQueryData(res, modelType); })
             .catch(function (res) { return _this.handleError(res); });
@@ -100,13 +100,18 @@ var JsonApiDatastore = (function () {
         enumerable: true,
         configurable: true
     });
-    JsonApiDatastore.prototype.buildUrl = function (modelType, params, id) {
+    JsonApiDatastore.prototype.buildUrl = function (modelType, params, id, customEndpointUrl) {
         var modelOptions = Reflect.getMetadata('JsonApiModelConfig', modelType);
-        var typeName = modelOptions.type;
-        var modelBaseUrl = modelOptions.baseUrl;
-        var baseUrl = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
-        var idToken = id ? "/" + id : null;
-        return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
+        if (customEndpointUrl) {
+            return [customEndpointUrl, (params ? '?' : ''), this.toQueryString(params)].join('');
+        }
+        else {
+            var typeName = modelOptions.type;
+            var baseUrl = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
+            var modelBaseUrl = modelOptions.baseUrl;
+            var idToken = id ? "/" + id : null;
+            return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
+        }
     };
     JsonApiDatastore.prototype.getRelationships = function (data) {
         var relationships;
