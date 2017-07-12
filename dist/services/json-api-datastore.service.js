@@ -244,6 +244,14 @@ var JsonApiDatastore = (function () {
         var hash = this.fromArrayToHash(models);
         _.extend(this._store[type], hash);
     };
+    JsonApiDatastore.prototype.setBaseEndpoint = function (baseUrl, apiVersion) {
+        if (baseUrl) {
+            Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl = baseUrl;
+        }
+        if (apiVersion || apiVersion === '') {
+            Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).apiVersion = apiVersion;
+        }
+    };
     JsonApiDatastore.prototype.fromArrayToHash = function (models) {
         var modelsArray = models instanceof Array ? models : [models];
         return _.keyBy(modelsArray, 'id');

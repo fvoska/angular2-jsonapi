@@ -30,6 +30,7 @@ export declare class JsonApiDatastore {
     private getOptions(customHeaders?);
     private toQueryString(params);
     addToStore(models: JsonApiModel | JsonApiModel[]): void;
+    setBaseEndpoint(baseUrl: string, apiVersion?: string): void;
     private fromArrayToHash(models);
     private resetMetadataAttributes<T>(res, attributesMetadata, modelType);
     private updateRelationships(model, relationships);
