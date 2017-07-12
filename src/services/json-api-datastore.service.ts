@@ -9,6 +9,7 @@ import 'rxjs/add/observable/throw';
 import { JsonApiModel } from '../models/json-api.model';
 import {ErrorResponse} from '../models/error-response.model';
 import { ModelOptions } from '../interfaces/model-options.interface';
+import { DatastoreConfig } from '../interfaces/datastore-config.interface';
 
 export type ModelType<T extends JsonApiModel> = { new(datastore: JsonApiDatastore, data: any): T; };
 
@@ -100,15 +101,24 @@ export class JsonApiDatastore {
 
   private buildUrl<T extends JsonApiModel>(modelType: ModelType<T>, params?: any, id?: string, customEndpointUrl?: string): string {
     const modelOptions: ModelOptions = Reflect.getMetadata('JsonApiModelConfig', modelType);
+    const datastoreConfig: DatastoreConfig = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor);
 
     if (customEndpointUrl) {
       return [customEndpointUrl, (params ? '?' : ''), this.toQueryString(params)].join('');
     } else {
       const typeName: string = modelOptions.type;
-      const baseUrl: string = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
+
+      const baseUrl: string = datastoreConfig.baseUrl;
       const modelBaseUrl: string = modelOptions.baseUrl;
+
+      const apiVersion: string = datastoreConfig.apiVersion;
+      const modelApiVersion: string = modelOptions.apiVersion;
+
+      const baseEndpoint: string = [(modelBaseUrl || baseUrl), (modelApiVersion || apiVersion)].join('');
+
       const idToken: string = id ? `/${id}` : null;
-      return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
+
+      return [baseEndpoint, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
     }
   }
 

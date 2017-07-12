@@ -94,7 +94,7 @@ See [this issue](https://github.com/ghidoz/angular2-jsonapi/issues/4) for detail
 
 Firstly, create your `Datastore` service:
 - Extend the `JsonApiDatastore` class
-- Decorate it with `@JsonApiDatastoreConfig`, set the `baseUrl` for your APIs and map your models
+- Decorate it with `@JsonApiDatastoreConfig`, set the `baseUrl` for your APIs and map your models (Optional: you can set `apiVersion`, `baseUrl` will be suffixed with it)
 - Pass the `Http` depencency to the parent constructor.
 
 ```typescript
@@ -466,6 +466,7 @@ export class Post extends JsonApiModel { }
 
 * `type`
 * `baseUrl` - if not specified, the global `baseUrl` will be used
+* `apiVersion` - if not specified, the global `apiVersion` will be used
 
 ## TODO
 - [x] Deleting records
