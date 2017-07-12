@@ -102,15 +102,19 @@ var JsonApiDatastore = (function () {
     });
     JsonApiDatastore.prototype.buildUrl = function (modelType, params, id, customEndpointUrl) {
         var modelOptions = Reflect.getMetadata('JsonApiModelConfig', modelType);
+        var datastoreConfig = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor);
         if (customEndpointUrl) {
             return [customEndpointUrl, (params ? '?' : ''), this.toQueryString(params)].join('');
         }
         else {
             var typeName = modelOptions.type;
-            var baseUrl = Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl;
+            var baseUrl = datastoreConfig.baseUrl;
             var modelBaseUrl = modelOptions.baseUrl;
+            var apiVersion = datastoreConfig.apiVersion;
+            var modelApiVersion = modelOptions.apiVersion;
+            var baseEndpoint = [(modelBaseUrl || baseUrl), (modelApiVersion || apiVersion)].join('');
             var idToken = id ? "/" + id : null;
-            return [modelBaseUrl || baseUrl, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
+            return [baseEndpoint, typeName, idToken, (params ? '?' : ''), this.toQueryString(params)].join('');
         }
     };
     JsonApiDatastore.prototype.getRelationships = function (data) {
