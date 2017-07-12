@@ -246,6 +246,16 @@ export class JsonApiDatastore {
     _.extend(this._store[type], hash);
   }
 
+  public setBaseEndpoint(baseUrl: string, apiVersion?: string): void {
+    if (baseUrl) {
+      Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).baseUrl = baseUrl;
+    }
+
+    if (apiVersion || apiVersion === '') {
+      Reflect.getMetadata('JsonApiDatastoreConfig', this.constructor).apiVersion = apiVersion;
+    }
+  }
+
   private fromArrayToHash(models: JsonApiModel | JsonApiModel[]): any {
     let modelsArray: JsonApiModel[] = models instanceof Array ? models : [models];
     return _.keyBy(modelsArray, 'id');

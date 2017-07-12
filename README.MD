@@ -479,6 +479,10 @@ export class Post extends JsonApiModel { }
 - [ ] Unit testing
 
 
+### Helpers
+
+`setBaseEndpoint(baseUrl, apiVersion)` - you can change default `baseUrl` or `apiVersion` after the initialization of datastore.
+
 ## Development
 
 To generate all `*.js`, `*.js.map` and `*.d.ts` files:
